@@ -1,13 +1,13 @@
 ---
 name: tunnova-component
-description: Tunnova（隧道网关固件，主仓库 almightyYantao/tunnova-openwrt-sdwan）组件热更新（.tnc）的开发、打包、影响评估、界面展示、测试设备实测和发布。组件 = 固件自带、可单独更新的用户态部分（第一期是隧道组件 tunnel：tunnova-tunnel、updown、TCP 封装中转、strongSwan 路由配置）。当用户要发隧道补丁但不想发固件、做 / 改组件更新机制、写组件更新的界面、评估一次组件更新会不会影响现有隧道、或问组件怎么发布时使用。不负责插件（.tnp，走 tunnova-plugin）和整固件发版。
+description: Tunnova（隧道网关固件，主仓库 almightyYantao/tunnova-sdwan）组件热更新（.tnc）的开发、打包、影响评估、界面展示、测试设备实测和发布。组件 = 固件自带、可单独更新的用户态部分（第一期是隧道组件 tunnel：tunnova-tunnel、updown、TCP 封装中转、strongSwan 路由配置）。当用户要发隧道补丁但不想发固件、做 / 改组件更新机制、写组件更新的界面、评估一次组件更新会不会影响现有隧道、或问组件怎么发布时使用。不负责插件（.tnp，走 tunnova-plugin）和整固件发版。
 ---
 
 # Tunnova 组件热更新
 
 设计文档（以它为准，有冲突先读它）：`docs/component-update.md`。插件机制（签名、分发、开机恢复都复用）：`docs/plugin-architecture.md`。
 
-仓库：主仓库 `tunnova-openwrt-sdwan`（本地路径问用户或看当前工作目录）。对外文案、界面一律中文；白标：任何地方不出现 ImmortalWrt / OpenWrt / LuCI。
+仓库：主仓库 `tunnova-sdwan`（本地路径问用户或看当前工作目录）。对外文案、界面一律中文；白标：任何地方不出现 ImmortalWrt / OpenWrt / LuCI。
 
 > 已实现（2026-10-10）。代码位置：设备端 `files/usr/libexec/tunnova-component`（白名单 `files/usr/share/tunnova/components/<id>.paths`，
 > 开机 `files/etc/init.d/tunnova-components`）、演算 `tunnova-tunnel vti-plan`、打包 `components/build.sh` / `components/index.py` / `.github/workflows/components.yml`、

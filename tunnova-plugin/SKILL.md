@@ -1,13 +1,13 @@
 ---
 name: tunnova-plugin
-description: 为 Tunnova（隧道网关固件，主仓库 almightyYantao/tunnova-openwrt-sdwan）编写、打包、签名、测试和发布插件（.tnp）。覆盖插件目录结构、manifest 规则、前端 window.Tunnova SDK、BusyBox sh 后端写法、uci tnp_<id> 配置、procd 服务、本地打包签名、上测试设备实测、经插件中心发布。当用户要给 Tunnova 加插件 / 扩展功能 / 写 .tnp、改现有插件、或问插件怎么写 / 怎么发布时使用。
+description: 为 Tunnova（隧道网关固件，主仓库 almightyYantao/tunnova-sdwan）编写、打包、签名、测试和发布插件（.tnp）。覆盖插件目录结构、manifest 规则、前端 window.Tunnova SDK、BusyBox sh 后端写法、uci tnp_<id> 配置、procd 服务、本地打包签名、上测试设备实测、经插件中心发布。当用户要给 Tunnova 加插件 / 扩展功能 / 写 .tnp、改现有插件、或问插件怎么写 / 怎么发布时使用。
 ---
 
 # Tunnova 插件开发
 
 插件让 Tunnova 不重刷固件就多出后台菜单页 + 后端脚本 / 服务。设计文档（以它为准，有冲突先读它）：`docs/plugin-architecture.md`。完整示例：`plugins/cron/`（定时任务，覆盖了所有环节，**写新插件先照着它抄**）。
 
-仓库：主仓库 `tunnova-openwrt-sdwan`（本地路径问用户或看当前工作目录）。对外文案、界面一律中文；**白标：任何地方不出现 ImmortalWrt / OpenWrt / LuCI 字样**（插件名、描述、界面、日志都算）。
+仓库：主仓库 `tunnova-sdwan`（本地路径问用户或看当前工作目录）。对外文案、界面一律中文；**白标：任何地方不出现 ImmortalWrt / OpenWrt / LuCI 字样**（插件名、描述、界面、日志都算）。
 
 ## 1. 目录结构
 
