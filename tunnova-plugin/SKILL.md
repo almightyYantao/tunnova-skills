@@ -151,6 +151,10 @@ cat plugins/out/<id>-<版本>.tnp | <到测试设备> 'cat > /tmp/tunnova-up/plu
 7. 前端：手动部署前端要先 `./stamp.sh web/dist`（否则浏览器用缓存的旧 app.js）；插件页本身随插件包走，`?v=` 自动带版本
 8. 设备版本低于 `min_tunnova` 时会拒装——测试机用的是开发版就临时改 `/etc/tunnova_release`（**测完改回去**）
 
+临时试改过的 backend / init 时**不要 `cp` 到 `/etc/init.d/tnp-<id>`**：老固件上它是软链接，cp 会把它变成普通文件，procd 服务名随之变化，
+之后同一个服务会按两个名字各跑一份（端口冲突、反复重启）。只改插件目录里的文件；想正式验证就打包用 `install` 装。
+查 procd 实际登记的名字：`ubus call service list`；清掉多余的一份：`ubus call service delete '{"name":"<名字>"}'`。
+
 ## 7. 发布到插件中心
 
 插件源：`<插件源>/index.json` + `<插件源>/<id>/<id>-<版本>.tnp`。出厂默认 `https://r2.tunnova.com/tunnova/plugins`（公开读），也可以在设备「运维 → 插件管理 → 插件中心 → 插件源」单独设地址和私有桶密钥（`uci tunnova.plugins.url / access_key / secret_key / region`）。CI 发布的是默认位置（`<S3_PREFIX>/plugins/`）；单独设了插件源的设备，要把插件包和 index.json 传到那个地址（`plugins/index.py` 生成目录）。
