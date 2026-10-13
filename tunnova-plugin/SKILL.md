@@ -16,7 +16,7 @@ plugins/<id>/
   manifest.json         必需
   ui/src/index.jsx      可选：前端页面（打包成 ui/ui.js）；ui/ 下其它静态文件原样带上
   backend               可选：后端脚本（BusyBox sh），前端经 exec 调用；ACL 只放行这个文件名
-  init                  可选：procd / rc.common 服务脚本（链接成 /etc/init.d/tnp-<id>）
+  init                  可选：procd / rc.common 服务脚本（固件生成包装脚本 /etc/init.d/tnp-<id> 引入它，procd 服务名是 tnp-<id>；脚本里别用 $0 / dirname 找自己的目录，写绝对路径）
   uci/tnp_<id>          可选：默认配置，安装时 /etc/config/tnp_<id> 不存在才拷
   migrate               可选：覆盖安装（升级插件）后执行一次，参数是旧版本号
   bin/x86_64/…  bin/aarch64/…   可选：二进制，安装时链接成 bin/current
