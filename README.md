@@ -12,7 +12,7 @@
 克隆到任意目录，再把两个文件夹软链接进 `~/.claude/skills/`：
 
 ```sh
-git clone git@github.com:almightyYantao/tunnova-openwrt-sdwan-plugin-skill.git ~/.claude/skill-repos/tunnova-skills
+git clone git@github.com:almightyYantao/tunnova-skills.git ~/.claude/skill-repos/tunnova-skills
 ln -s ~/.claude/skill-repos/tunnova-skills/tunnova-plugin    ~/.claude/skills/tunnova-plugin
 ln -s ~/.claude/skill-repos/tunnova-skills/tunnova-component ~/.claude/skills/tunnova-component
 ```
