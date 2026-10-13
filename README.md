@@ -1,11 +1,20 @@
-# tunnova-plugin skill
+# Tunnova skills
 
-Claude Code skill：为 Tunnova 隧道网关编写、打包、签名、测试和发布插件（`.tnp`）。
+给 Claude Code 用的两个 skill：
 
-安装：把本仓库克隆到 `~/.claude/skills/tunnova-plugin`。
+| 目录 | 用途 |
+|---|---|
+| [tunnova-plugin](tunnova-plugin/SKILL.md) | 为 Tunnova 隧道网关编写、打包、签名、测试和发布插件（`.tnp`） |
+| [tunnova-component](tunnova-component/SKILL.md) | 组件热更新（`.tnc`）：开发、打包、影响评估、界面、实测和发布 |
+
+## 安装
+
+克隆到任意目录，再把两个文件夹软链接进 `~/.claude/skills/`：
 
 ```sh
-git clone git@github.com:almightyYantao/tunnova-openwrt-sdwan-plugin-skill.git ~/.claude/skills/tunnova-plugin
+git clone git@github.com:almightyYantao/tunnova-openwrt-sdwan-plugin-skill.git ~/.claude/skill-repos/tunnova-skills
+ln -s ~/.claude/skill-repos/tunnova-skills/tunnova-plugin    ~/.claude/skills/tunnova-plugin
+ln -s ~/.claude/skill-repos/tunnova-skills/tunnova-component ~/.claude/skills/tunnova-component
 ```
 
-内容见 [SKILL.md](SKILL.md)。
+以后 `git pull` 就能更新。
