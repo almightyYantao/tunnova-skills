@@ -66,6 +66,7 @@ plugins/<id>/
   ```
   需要常驻进程时用 `USE_PROCD=1` + `procd_open_instance`，并 `procd_set_param respawn`。
 - 权限：固件自带的公共 ACL 组已放行 `/etc/tunnova/plugins/*/backend` 的 exec 和 `tnp_*` 的 uci 读写，**插件不带 acl.json**。要读写别的配置 / 调别的 ubus 对象，直接用（root 会话本来就有）；要调别的脚本，从 backend 里调。
+- **插件程序的出站要走分流**（本机程序走 output，默认不经过分流）：给出站 socket 设 SO_MARK 请求标记——`0x2000` = 按分流规则，`0x2001`–`0x20ff` = 指定出口（写 `/etc/tunnova/route.local.d/<id>`，每行「标记 出口 id」，改了执行 `/usr/libexec/tunnova-route apply`）；解析要走本机 dnsmasq（127.0.0.1），否则域名规则不生效；停用 / 卸载时删掉这个文件再 apply。老版本分流不支持时等于直连，用 `grep -q route.local.d /usr/libexec/tunnova-route` 判断。详见 `docs/plugin-architecture.md` 5.7，示例 `plugins/singbox/`。
 - **要下载的大二进制**（内核等，几十 MB）不放插件包、不放 `plugin-data`（都会进配置备份和刷固件的保留包；x86 上保留包超过引导分区剩余的约 23MB，整份配置都会丢）：放 **`/opt/tnp/<id>/`**（固件 v1.3.13 起：N1 上指向数据分区，刷固件后还在；x86 刷固件后没了；都不进备份；卸载时固件删）。老固件上自己 `mkdir -p`。`init` 发现缺了就后台准备：先把旧位置（如 `/opt/<id>`）的挪过来；下载走隧道出口的先等出口在线（最多约 3 分钟）；失败退避重试（30 秒起、最长 10 分钟）直到成功或停用；curl 加 `--connect-timeout 20 --speed-limit 1024 --speed-time 60`；进度 / 原因写 `/tmp/<id>.state` 给页面显示。下载源优先插件源镜像（`plugins/<id>/mirror.sh` 在发布插件时同步，带 SHA256SUMS）。详见 `docs/plugin-architecture.md` 5.4「插件下载的大文件」，参考 `plugins/tunnovavpn/backend`。
 - **页面调用 30 秒就被掐断**（`rpcd -t 30`，进程被杀）：页面上的下载 / 长任务只启动后台、抽屉轮询日志。起后台必须写成 `( exec </dev/null >日志 2>&1; setsid 命令 & )`——直接 `setsid 命令 </dev/null >日志 2>&1 &` 会让这次调用一直等后台跑完（N1 实测）。
 
