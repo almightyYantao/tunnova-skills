@@ -56,11 +56,12 @@ description: Tunnova（隧道网关固件，主仓库 almightyYantao/tunnova-sdw
    - 试用期通过变 `active`；再故意装一个坏包（比如脚本语法错误），确认自动回滚、隧道恢复；
    - 测速用隧道对端网段里的测速服务（地址问用户），`curl --interface ipsec_<名称>` 绑网卡。
 6. **发布**：打 tag `comp-<id>-<版本>`，CI 产出 `.tnc` 和 `components/index.json`；Cloud 上先推试点设备，看影响列和回报，再推其余。
+   - **iwan 组件带了新的 iwansd**（`iwansd/iwansd.c` 的 `VERSION` 变了）：独立二进制要同版本发布，tag `iwansd-v<VERSION>`（`iwansd.yml` 出 linux amd64 / arm64、macOS 客户端、install.sh）。改动合进 main 时 CI 发现这个版本还没有 tag 会自动发布并打 tag；发版汇报里核对升级源 `iwansd/latest/VERSION` 已是新版本。
 7. **随固件自动同步**：每发一个正式版固件 vX.Y.Z，CI（`components-sync.yml` → `components/sync.sh`）自动给每个组件打 `X.Y.Z-0`（带脚本、不带中转二进制），适用 `compat_from`（`component.json`，默认 v1.3.5）到这一版。这一版固件自己装 `-0` 没有变化（设备显示「已是最新」），更早的固件装它不用刷机。改动依赖组件之外的东西时把 `compat_from` 调到这一版。
 
 ## 现有组件（白名单 files/usr/share/tunnova/components/<id>.paths）
 
-- `tunnel` 隧道、`route` 分流（respawn，不能 restart）、`mon` 监控（含指标 / 采集器）、`iwan` iWAN（只拉起带 iwan-run 的实例）、`sys` 系统工具（按需调用）。
+- `tunnel` 隧道、`route` 分流（respawn，不能 restart）、`mon` 监控（含指标 / 采集器）、`iwan` iWAN（iwansd 换了：直接用 iwansd 起的本机服务端实例会被重新拉起、接入的客户端全部断开重连；经 iwan-run 起的客户端隧道不重启，要 `tunnova-iwan reconnect <隧道>` 才换上新程序。`etc/init.d/iwan` 是 `reload:iwan`，装完自动 reload，启动参数变了的实例会重启）、`sys` 系统工具（按需调用）。
 - 不做成组件：tunnova-ctl（救命通道）、cloud / agent、登录 / 账号 / 管理面安全 / 只读、授权、插件和组件机制本身、lib.sh。理由见设计文档 3.1。
 - 加新组件：写 `<id>.paths`（随固件发）→ 想清楚动作（能 respawn 就别 restart，restart 会先 stop）→ 在 `impact` / `effects` 里补这个组件的影响 → 健康检查（`snapshot` / `check`）→ 实测预测和实际对得上。
 
